@@ -1,6 +1,6 @@
 package gr.hua.dit.agrodisastersystem.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="compensation_form")
