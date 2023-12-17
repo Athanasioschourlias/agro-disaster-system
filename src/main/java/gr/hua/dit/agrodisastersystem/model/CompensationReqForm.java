@@ -13,8 +13,6 @@ public class CompensationReqForm {
     private String firstName;
     @Column(name="last_name")
     private String lastName;
-    @Column(name="age")
-    private int age;
     @Column(name="location")
     private String location;
     @Column(name="damage_discription")
@@ -32,7 +30,6 @@ public class CompensationReqForm {
     public CompensationReqForm(String firstName, String lastName, int age, String location, String damage_discription, int acares, String cropType, String status) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.age = age;
         this.location=location;
         this.damage_discription = damage_discription;
         this.acares = acares;
@@ -78,14 +75,6 @@ public class CompensationReqForm {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public String getDamageDiscription() {

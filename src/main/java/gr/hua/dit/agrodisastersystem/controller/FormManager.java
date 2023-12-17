@@ -1,5 +1,6 @@
 package gr.hua.dit.agrodisastersystem.controller;
 
+import gr.hua.dit.agrodisastersystem.payload.response.Forms;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,7 @@ public class FormManager {
      * @return A Form type json object of the newly added form to the database
      */
     @PutMapping("/edit/form/{form_id}")
-    public ResponseEntity<Form> updateUserById(@PathVariable("form_id") String FormId, @RequestBody Form Form) {
+    public ResponseEntity<Forms> updateUserById(@PathVariable("form_id") String FormId, @RequestBody Forms Form) {
 
         throw new IllegalStateException("Cannot yet return all the unprocessed forms");
 

@@ -1,6 +1,7 @@
 package gr.hua.dit.agrodisastersystem.controller;
 
 import gr.hua.dit.agrodisastersystem.model.User;
+import gr.hua.dit.agrodisastersystem.payload.response.Forms;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class CompensationFormsSubmit {
      * @return on success the newly created form object.
      */
     @PostMapping(path = "/create/form/{farmer_tin}")
-    public ResponseEntity<Form> saveNewForm(@PathVariable("farmer_tin") String FarmerTin,@RequestBody Form Form ) {
+    public ResponseEntity<Forms> saveNewForm(@PathVariable("farmer_tin") String FarmerTin, @RequestBody Forms Form ) {
 
         throw new IllegalStateException("Not yet ready to add new forms");
 
