@@ -12,6 +12,34 @@ For further reference, please consider the following sections
 * [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.2.0/maven-plugin/reference/html/#build-image)
 * [Spring Web](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#web)
 
+Inside the code you will come across the following, which is a template in order to better document and automate the process of documentation
+of REST-FULL API'S:
+
+```
+/**
+ * This is a template for the commenting and documentation of endpoints in our api
+ *
+ * @param  paramname  this marks a parameter our endpoint accepts and describes its use.
+ * @param  paramname2  if we have more than one.
+ * @return      this marks what our endpoint returns
+*/
+
+ 
+/**
+ * Include tags in the following order:
+ *
+ * @author (classes and interfaces only, required)
+ * @version (classes and interfaces only, required. See footnote 1)
+ * @param (methods and constructors only)
+ * @return (methods only)
+ * @exception (@throws is a synonym added in Javadoc 1.2)
+ * @see
+ * @since
+ * @serial (or @serialField or @serialData)
+ * @deprecated (see How and When To Deprecate APIs)
+ */
+```
+
 ### From Zero to Hero
 
 Here we have the steps needed for you to be able to fire up the project if you just have a blank, brand new pc.
@@ -41,3 +69,24 @@ The following guides illustrate how to use some features concretely:
 * [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
 * [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
 
+
+## Contributing
+Pull requests are welcome.
+
+This project was created by the students Athanasios Chourlias and Chris Maikos of the Harokopio University of Athens.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
+
+
+## Git Init Actions
+
+```
+echo "# agro-disaster-system-UI" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:Athanasioschourlias/agro-disaster-system-UI.git
+git push -u origin main
+```
