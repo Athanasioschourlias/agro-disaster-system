@@ -2,6 +2,7 @@ package gr.hua.dit.agrodisastersystem.payload.response;
 
 public class Forms {
 
+    private int farmerTIN;
     private String firstname;
 
     private String lastName;
@@ -15,6 +16,13 @@ public class Forms {
     private String cropType;
 
     private String status;
+
+    public int getFarmerTIN(){
+        return farmerTIN;
+    }
+    public void setFarmerTIN(int newFarmerTin){
+        this.farmerTIN = newFarmerTin;
+    }
 
     public String getFirstname() {
         return firstname;

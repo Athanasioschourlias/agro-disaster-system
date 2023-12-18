@@ -1,16 +1,23 @@
 package gr.hua.dit.agrodisastersystem.controller;
 
+import gr.hua.dit.agrodisastersystem.model.CompensationReqForm;
 import gr.hua.dit.agrodisastersystem.payload.response.Forms;
+import gr.hua.dit.agrodisastersystem.service.CompensationReqFormService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/employee/manager")
 @CrossOrigin(origins="*")
 public class FormManager {
 
-
+    @Autowired
+    private CompensationReqFormService CompensationReqFormService;
     /**
      * This method is responsible to fetch all the forms in the system available, processed and unprocessed
      *
@@ -18,10 +25,8 @@ public class FormManager {
      * @return A list with all the available forms
      */
     @GetMapping("/get-forms/all")
-    public String getAllForms() {
-
-        return "here we will return a list with all the forms from all the farmers";
-
+    public List<CompensationReqForm> getAllForms() {
+        return CompensationReqFormService.findAllForms();
     }
 
     /**
@@ -31,9 +36,9 @@ public class FormManager {
      * @return A list with all the processed forms
      */
     @GetMapping("/get-forms/processed")
-    public String getAllProcessedForms() {
+    public List<Forms> getAllProcessedForms() {
 
-        return "return a list with all the processed forms";
+        return new ArrayList<>();
 
     }
 
@@ -44,9 +49,9 @@ public class FormManager {
      * @return A list with all the un-processed forms
      */
     @GetMapping("/get-forms")
-    public String getAllUnProcessedForms() {
+    public List<Forms> getAllUnProcessedForms() {
 
-        return "return a list with all the un-processed forms";
+        return new ArrayList<>();
 
     }
 

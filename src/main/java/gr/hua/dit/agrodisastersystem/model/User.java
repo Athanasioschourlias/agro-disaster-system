@@ -1,9 +1,6 @@
 package gr.hua.dit.agrodisastersystem.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -12,6 +9,7 @@ import java.util.Objects;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tin") // Taxpayer Identification Number
     private String tin;
 
@@ -41,11 +39,15 @@ public class User {
         this.email = email;
     }
 
-    public User(String tin, String firstName, String lastName, String password) {
+    public User(String tin, String firstName, String lastName, String password, String userMail, String userRole) {
+
         this.tin = tin;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
+        this.email = userMail;
+        this.role = userRole;
+
     }
 
     public String getIt() {

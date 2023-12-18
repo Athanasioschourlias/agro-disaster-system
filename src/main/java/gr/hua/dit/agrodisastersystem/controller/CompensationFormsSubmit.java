@@ -1,17 +1,24 @@
 package gr.hua.dit.agrodisastersystem.controller;
 
+import gr.hua.dit.agrodisastersystem.model.CompensationReqForm;
 import gr.hua.dit.agrodisastersystem.model.User;
 import gr.hua.dit.agrodisastersystem.payload.response.Forms;
+import gr.hua.dit.agrodisastersystem.service.CompensationReqFormService;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/farmer/compensation")
 @CrossOrigin(origins="*")
 public class CompensationFormsSubmit {
 
+    @Autowired
+    private CompensationReqFormService CompensationReqFormService;
     /**
      * This method is responsible to validate the tin number given as a path variable and to create a list with all the forms
      * the given farmer with the given tin number, farmer_tin has submitted.
@@ -21,9 +28,10 @@ public class CompensationFormsSubmit {
      * @return A list with all the farmers forms
      */
     @GetMapping("/get-forms/{farmer_tin}")
-    public String getAllFormsForFarmer(@PathVariable("farmer_tin") String FarmerTin) {
+    public List<CompensationReqForm> getAllFormsForFarmer(@PathVariable("farmer_tin") int FarmerTin) {
 
-        return "here we will return a list with all the forms belonging to the farmer with the given tin" + FarmerTin ;
+        return CompensationReqFormService.findByFarmerTIN(FarmerTin);
+
 
     }
 

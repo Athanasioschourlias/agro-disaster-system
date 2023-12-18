@@ -1,7 +1,9 @@
 package gr.hua.dit.agrodisastersystem.controller;
 
 import gr.hua.dit.agrodisastersystem.model.User;
+import gr.hua.dit.agrodisastersystem.service.UserService;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ import java.util.Objects;
 @CrossOrigin(origins="*")
 public class Admin {
 
+    @Autowired
+    private UserService UserService;
     /**
      * This function is responsible to fetch and return
      *
@@ -23,7 +27,7 @@ public class Admin {
     @GetMapping("/users/get_all")
     public List<User> getAllUsers() {
 
-        return new ArrayList<>();
+        return UserService.findAllUsers();
 
     }
 
@@ -32,12 +36,21 @@ public class Admin {
      *
      * @param   newUser this marks a parameter our endpoint accepts and describes its use.
      * @param   auth    .
-     * @return          returns the newly created user info.
+     * @return          returns the status of the call and an appropriate message
      */
     @PostMapping(path = "/users/register")
-    public ResponseEntity<User> saveUsers(@RequestBody User newUser, Authentication auth) {
+    public ResponseEntity<String> saveUsers(@RequestBody User newUser, Authentication auth) {
 
-        throw new IllegalStateException("Not yet ready to add new users");
+        try {
+            UserService.createUser(newUser);
+
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+
+        } catch (Exception e) {
+            // Handle the exception and return an appropriate response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error creating user: " + e.getMessage());
+        }
 
     }
 

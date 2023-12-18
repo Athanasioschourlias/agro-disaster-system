@@ -1,4 +1,4 @@
-package gr.hua.dit.agrodisastersystem.Services;
+package gr.hua.dit.agrodisastersystem.service;
 
 import org.springframework.stereotype.Service;
 
