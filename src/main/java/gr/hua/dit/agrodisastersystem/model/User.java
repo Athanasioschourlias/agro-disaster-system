@@ -1,39 +1,36 @@
 package gr.hua.dit.agrodisastersystem.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.util.Objects;
 
 @Entity
-@Table(name="user")
+@Table(name = "user")
 public class User {
+
     @Id
-    @Column(name="tin") //Taxpayer Identification Number
+    @Column(name = "tin") // Taxpayer Identification Number
     private String tin;
-    @Column(name="first_name")
+
+    @Column(name = "first_name")
     private String firstName;
-    @Column(name="last_name")
+
+    @Column(name = "last_name")
     private String lastName;
-    @Column(name="password")
+
+    @Column(name = "password", columnDefinition = "VARCHAR(255) BINARY")
     private String password;
-    @Column(name="role") //ΕΛΓΑ employee, farmer, Admin
+
+    @Column(name = "role") // ΕΛΓΑ employee, farmer, Admin
     private String role;
-    @Column(name="email")
+
+    @Column(name = "email")
     private String email;
 
-    public User(String tin, String firstName, String lastName, String password, String role,String email) {
-        super();
-        this.tin = tin;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-        this.role = role;
-        this.email=email;
-    }
-    public User(){
-
+    public User() {
     }
 
     public String getEmail() {
