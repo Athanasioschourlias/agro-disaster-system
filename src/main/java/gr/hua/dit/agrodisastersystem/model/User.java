@@ -9,9 +9,8 @@ import java.util.Objects;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tin") // Taxpayer Identification Number
-    private String tin;
+    @Column(name = "tin_number") // Taxpayer Identification Number
+    private int tinNumber;
 
     @Column(name = "first_name")
     private String firstName;
@@ -39,9 +38,9 @@ public class User {
         this.email = email;
     }
 
-    public User(String tin, String firstName, String lastName, String password, String userMail, String userRole) {
+    public User(int tinNumber, String firstName, String lastName, String password, String userMail, String userRole) {
 
-        this.tin = tin;
+        this.tinNumber = tinNumber;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -50,12 +49,12 @@ public class User {
 
     }
 
-    public String getIt() {
-        return tin;
+    public int getTin_number() {
+        return tinNumber;
     }
 
-    public void setIt(String it) {
-        this.tin = tin;
+    public void setTin_number(int newTIN) {
+        this.tinNumber = newTIN;
     }
 
     public String getFirstName() {
@@ -95,11 +94,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(tin, user.tin);
+        return Objects.equals(tinNumber, user.tinNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tin);
+        return Objects.hash(password);
     }
 }

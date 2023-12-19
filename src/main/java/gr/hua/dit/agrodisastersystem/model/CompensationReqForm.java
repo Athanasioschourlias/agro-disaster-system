@@ -9,8 +9,9 @@ public class CompensationReqForm {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
     private int id;
-    @Column(name="farmer_tin")
-    private int farmerTIN;
+    @ManyToOne
+    @JoinColumn(name = "tin_number", referencedColumnName = "tin_number")
+    private User user;
     @Column(name="first_name")
     private String firstName;
     @Column(name="last_name")
@@ -29,8 +30,8 @@ public class CompensationReqForm {
     public CompensationReqForm(){
 
     }
-    public CompensationReqForm(int farmerTIN, String firstName, String lastName, String location, String damage_discription, int acares, String cropType, String status) {
-        this.farmerTIN = farmerTIN;
+    public CompensationReqForm(User user,String firstName, String lastName, String location, String damage_discription, int acares, String cropType, String status) {
+        this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
         this.location=location;
@@ -40,8 +41,8 @@ public class CompensationReqForm {
         this.status = status;
     }
 
-    public int getFarmerTIN(){return farmerTIN;}
-    public  void setFarmerTIN(int newFarmerTin){this.farmerTIN=newFarmerTin;}
+    public User getUser(){return this.user;}
+    public  void setUser(User newUser){this.user = newUser;}
     public String getLocation() {
         return location;
     }

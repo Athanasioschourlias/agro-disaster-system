@@ -25,9 +25,13 @@ public class Admin {
      * @return      A list of type USER
      */
     @GetMapping("/users/get_all")
-    public List<User> getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers() {
+        try{
+            return new ResponseEntity<>(UserService.findAllUsers(), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+        }
 
-        return UserService.findAllUsers();
 
     }
 
@@ -65,7 +69,6 @@ public class Admin {
     public ResponseEntity<User> updateUserByTIN(@PathVariable("user_tin") String UserTin,@RequestBody User newUser) {
 
         throw new IllegalStateException("Not yet ready to modify users by ID");
-
 
     }
 

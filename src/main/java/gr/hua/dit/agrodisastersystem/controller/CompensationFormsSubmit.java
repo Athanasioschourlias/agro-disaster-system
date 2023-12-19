@@ -3,6 +3,7 @@ package gr.hua.dit.agrodisastersystem.controller;
 import gr.hua.dit.agrodisastersystem.model.CompensationReqForm;
 import gr.hua.dit.agrodisastersystem.model.User;
 import gr.hua.dit.agrodisastersystem.payload.response.Forms;
+import gr.hua.dit.agrodisastersystem.repository.UserRepository;
 import gr.hua.dit.agrodisastersystem.service.CompensationReqFormService;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,11 +21,12 @@ public class CompensationFormsSubmit {
 
     @Autowired
     private CompensationReqFormService CompensationReqFormService;
+
     /**
      * This method is responsible to validate the tin number given as a path variable and to create a list with all the forms
      * the given farmer with the given tin number, farmer_tin has submitted.
      *
-     * @param  FarmerTin  A vaid farmet tin number
+     * @param  FarmerTin  A valid farmer tin number
      *
      * @return A list with all the farmers forms
      */
@@ -32,21 +35,27 @@ public class CompensationFormsSubmit {
 
         return CompensationReqFormService.findByFarmerTIN(FarmerTin);
 
-
     }
 
     /**
      * This method is responsible to validate the json object and add a new entry(form) to the database
      *
      * @param  FarmerTin  A vaid farmet tin number
-     * @param  Form A json object with the type of Form
+     * @param  form A json object with the type of Form
      *
      * @return on success the newly created form object.
      */
     @PostMapping(path = "/create/form/{farmer_tin}")
-    public ResponseEntity<Forms> saveNewForm(@PathVariable("farmer_tin") String FarmerTin, @RequestBody Forms Form ) {
+    public ResponseEntity<String> saveNewForm(@PathVariable("farmer_tin") String FarmerTin, @RequestBody CompensationReqForm form ) {
+        try {
 
-        throw new IllegalStateException("Not yet ready to add new forms");
+//            CompensationReqFormService.addForm(form, 0);
+            return new ResponseEntity<>("Can not Add the form", HttpStatus.OK);
+
+        } catch (Exception e){
+            return new ResponseEntity<>("Can not Add the form", HttpStatus.EXPECTATION_FAILED);
+        }
+
 
     }
 
