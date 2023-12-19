@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface CompensationReqFormRepository extends JpaRepository<CompensationReqForm, String> {
 
-    List<CompensationReqForm> findByUserTinNumber(int user_tin);
+    List<CompensationReqForm> findByUserTinNumber(String user_tin);
 
 
 

@@ -10,7 +10,7 @@ public class User {
 
     @Id
     @Column(name = "tin_number") // Taxpayer Identification Number
-    private int tinNumber;
+    private String tinNumber;
 
     @Column(name = "first_name")
     private String firstName;
@@ -38,7 +38,7 @@ public class User {
         this.email = email;
     }
 
-    public User(int tinNumber, String firstName, String lastName, String password, String userMail, String userRole) {
+    public User(String tinNumber, String firstName, String lastName, String password, String userMail, String userRole) {
 
         this.tinNumber = tinNumber;
         this.firstName = firstName;
@@ -49,11 +49,11 @@ public class User {
 
     }
 
-    public int getTin_number() {
+    public String getTin_number() {
         return tinNumber;
     }
 
-    public void setTin_number(int newTIN) {
+    public void setTin_number(String newTIN) {
         this.tinNumber = newTIN;
     }
 

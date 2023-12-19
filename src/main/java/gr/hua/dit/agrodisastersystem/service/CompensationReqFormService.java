@@ -23,12 +23,12 @@ public class CompensationReqFormService {
         return CompensationReqFormRepository.findAll();
     }
 
-    public List<CompensationReqForm> findByFarmerTIN(int user_tin) {
+    public List<CompensationReqForm> findByFarmerTIN(String user_tin) {
 
         return CompensationReqFormRepository.findByUserTinNumber(user_tin);
     }
 
-    public void addForm(CompensationReqForm form, int userTinNumber) {
+    public void addForm(CompensationReqForm form, String userTinNumber) {
         // Retrieve the user from the database based on TIN number
         User user = UserRepository.findByTinNumber(userTinNumber);
 

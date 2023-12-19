@@ -21,7 +21,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findUserByTin(int TIN) {
+    public User findUserByTin(String TIN) {
         return userRepository.findByTinNumber(TIN);
     }
 
