@@ -1,17 +1,12 @@
 package gr.hua.dit.agrodisastersystem.controller;
 
 import gr.hua.dit.agrodisastersystem.model.CompensationReqForm;
-import gr.hua.dit.agrodisastersystem.model.User;
-import gr.hua.dit.agrodisastersystem.payload.response.Forms;
-import gr.hua.dit.agrodisastersystem.repository.UserRepository;
 import gr.hua.dit.agrodisastersystem.service.CompensationReqFormService;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,7 +26,7 @@ public class CompensationFormsSubmit {
      * @return A list with all the farmers forms
      */
     @GetMapping("/get-forms/{farmer_tin}")
-    public List<CompensationReqForm> getAllFormsForFarmer(@PathVariable("farmer_tin") int FarmerTin) {
+    public List<CompensationReqForm> getAllFormsForFarmer(@PathVariable("farmer_tin") String FarmerTin) {
 
         return CompensationReqFormService.findByFarmerTIN(FarmerTin);
 
