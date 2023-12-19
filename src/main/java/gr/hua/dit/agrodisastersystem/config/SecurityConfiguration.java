@@ -50,6 +50,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/login", "/login?error", "/login?logout").permitAll()
                         .anyRequest().permitAll()
                 )
+                .csrf().disable()
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
