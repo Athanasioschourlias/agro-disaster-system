@@ -41,11 +41,12 @@ public class CompensationFormsSubmit {
      * @return on success the newly created form object.
      */
     @PostMapping(path = "/create/form/{farmer_tin}")
-    public ResponseEntity<String> saveNewForm(@PathVariable("farmer_tin") int FarmerTin, @RequestBody CompensationReqForm form ) {
+    public ResponseEntity<String> saveNewForm(@PathVariable("farmer_tin") String FarmerTin, @RequestBody CompensationReqForm form ) {
         try {
 
             CompensationReqFormService.addForm(form, FarmerTin);
-            return new ResponseEntity<>("Can not Add the form", HttpStatus.OK);
+
+            return new ResponseEntity<>("The form was added", HttpStatus.OK);
 
         } catch (Exception e){
             return new ResponseEntity<>("Can not Add the form", HttpStatus.EXPECTATION_FAILED);
