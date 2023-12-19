@@ -10,7 +10,7 @@ public class CompensationReqForm {
     @Column(name="id")
     private int id;
     @ManyToOne
-    @JoinColumn(name = "tin_number", referencedColumnName = "tin_number")
+    @JoinColumn(name = "tin_number", referencedColumnName = "user.tin_number")
     private User user;
     @Column(name="first_name")
     private String firstName;
