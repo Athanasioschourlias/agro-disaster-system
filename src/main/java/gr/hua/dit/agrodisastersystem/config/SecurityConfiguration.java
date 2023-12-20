@@ -61,8 +61,8 @@ public class SecurityConfiguration {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/login?error", "/login?logout").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/auth/login", "/health/**").permitAll()
+                        .anyRequest().fullyAuthenticated()
                 )
                 .csrf().disable()
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
@@ -74,7 +74,7 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "EDIT"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
 
