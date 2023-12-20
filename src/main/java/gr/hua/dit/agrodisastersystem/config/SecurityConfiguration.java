@@ -57,12 +57,13 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors().and()
                 .formLogin(Customizer.withDefaults())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/health/**").permitAll()
-                        .anyRequest().fullyAuthenticated()
+                        .requestMatchers("/auth/login", "/health/check/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .csrf().disable()
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
