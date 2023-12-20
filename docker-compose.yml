@@ -13,8 +13,8 @@ services:
     ports:
       - "8081:8081"
     env_file: .env
-#    depends_on:
-#      - mysqldb
+    depends_on:
+      - mysqldb
 
   mysqldb:
     image: mysql:8
@@ -24,13 +24,10 @@ services:
       - db-mysql
     volumes:
       - dbdata:/var/lib/mysql
-      - ./src/main/resources/data.sql:/docker-entrypoint-initdb.d/data.sql
     env_file: .env
     environment:
       - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
       - MYSQL_DATABASE=$DB_NAME
-    depends_on:
-      - agro-disaster
 
 networks:
   db-mysql:
