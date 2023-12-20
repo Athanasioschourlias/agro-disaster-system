@@ -1,7 +1,6 @@
 package gr.hua.dit.agrodisastersystem.controller;
 
 import gr.hua.dit.agrodisastersystem.model.CompensationReqForm;
-import gr.hua.dit.agrodisastersystem.payload.response.Forms;
 import gr.hua.dit.agrodisastersystem.service.CompensationReqFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +35,7 @@ public class FormManager {
      * @return A list with all the processed forms
      */
     @GetMapping("/get-forms/processed")
-    public List<Forms> getAllProcessedForms() {
+    public List<CompensationReqForm> getAllProcessedForms() {
 
         return new ArrayList<>();
 
@@ -49,7 +48,7 @@ public class FormManager {
      * @return A list with all the un-processed forms
      */
     @GetMapping("/get-forms")
-    public List<Forms> getAllUnProcessedForms() {
+    public List<CompensationReqForm> getAllUnProcessedForms() {
 
         return new ArrayList<>();
 
@@ -64,10 +63,9 @@ public class FormManager {
      * @return A Form type json object of the newly added form to the database
      */
     @PutMapping("/edit/form/{form_id}")
-    public ResponseEntity<Forms> updateUserById(@PathVariable("form_id") String FormId, @RequestBody Forms Form) {
+    public ResponseEntity<CompensationReqForm> updateUserById(@PathVariable("form_id") String FormId, @RequestBody CompensationReqForm Form) {
 
         throw new IllegalStateException("Cannot yet return all the unprocessed forms");
-
 
     }
 

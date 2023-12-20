@@ -2,6 +2,8 @@ package gr.hua.dit.agrodisastersystem.model;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name="compensation_form")
 public class CompensationReqForm {
@@ -12,10 +14,6 @@ public class CompensationReqForm {
     @ManyToOne
     @JoinColumn(name = "tin_number", referencedColumnName = "tin_number")
     private User user;
-    @Column(name="first_name")
-    private String firstName;
-    @Column(name="last_name")
-    private String lastName;
     @Column(name="location")
     private String location;
     @Column(name="damage_discription")
@@ -30,10 +28,8 @@ public class CompensationReqForm {
     public CompensationReqForm(){
 
     }
-    public CompensationReqForm(User user,String firstName, String lastName, String location, String damage_discription, int acares, String cropType, String status) {
+    public CompensationReqForm(User user, String location, String damage_discription, int acares, String cropType, String status) {
         this.user = user;
-        this.firstName = firstName;
-        this.lastName = lastName;
         this.location=location;
         this.damage_discription = damage_discription;
         this.acares = acares;
@@ -67,22 +63,6 @@ public class CompensationReqForm {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getDamageDiscription() {
         return damage_discription;
     }
@@ -107,5 +87,15 @@ public class CompensationReqForm {
         this.cropType = cropType;
     }
 
+    @Override
+    public boolean equals(Object form) {
+        if (this == form) return true;
+        if (!(form instanceof CompensationReqForm that)) return false;
+        return id == that.id && acares == that.acares && Objects.equals(location, that.location) && Objects.equals(damage_discription, that.damage_discription) && Objects.equals(cropType, that.cropType) && Objects.equals(status, that.status);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, location, damage_discription, acares, cropType, status);
+    }
 }

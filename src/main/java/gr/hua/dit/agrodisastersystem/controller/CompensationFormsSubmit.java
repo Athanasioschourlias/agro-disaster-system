@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/farmer/compensation")
@@ -44,13 +45,33 @@ public class CompensationFormsSubmit {
     public ResponseEntity<String> saveNewForm(@PathVariable("farmer_tin") String FarmerTin, @RequestBody CompensationReqForm form ) {
         try {
 
-            CompensationReqFormService.addForm(form, FarmerTin);
-
-            return new ResponseEntity<>("The form was added", HttpStatus.OK);
+            return CompensationReqFormService.addForm(form, FarmerTin);
 
         } catch (Exception e){
+
             return new ResponseEntity<>("Can not Add the form", HttpStatus.EXPECTATION_FAILED);
+
         }
+    }
+
+    /**
+     * This method is responsible to take the json object from the request, renew the old form object that is in the database with the new one
+     * and make sure a regular user(farmer) can only edit his forms
+     *
+     * @param  FormId  A vaid farmet tin number
+     * @param  Form    A Form type object
+     *
+     * @return A Form type json object of the newly added form to the database
+     */
+    @PutMapping("/edit/form/{form_id}/{farmer_tin}")
+    public ResponseEntity<CompensationReqForm> updateFormById(
+            @PathVariable("form_id") int FormId,
+            @PathVariable("farmer_tin") String FarmerTin,
+            @RequestBody CompensationReqForm Form)
+    {
+
+        return CompensationReqFormService.replaceFormById(FormId,FarmerTin,Form);
+
     }
 
     /**
@@ -64,7 +85,16 @@ public class CompensationFormsSubmit {
     @DeleteMapping ("/delete/form/{form_id}/{farmer_tin}")
     public ResponseEntity<String> deleteFormById(@PathVariable("form_id") String FormId, @PathVariable("farmer_tin") String FarmerTin) {
 
-        return new ResponseEntity<>("Can not delete form yet", HttpStatus.OK);
+        try {
+
+            return CompensationReqFormService.deleteCompensationReqForm(FarmerTin, FormId);
+
+        } catch (Exception e){
+
+            return new ResponseEntity<>("Can not Delete the form", HttpStatus.EXPECTATION_FAILED);
+
+        }
+
     }
 
 }
