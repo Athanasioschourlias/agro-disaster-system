@@ -19,8 +19,9 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        createUserIfNotFound("219113", "admin", "admin", "yourAdminPassword", "ADMIN", "ADMIN@gmail.com");
-        createUserIfNotFound("165905546", "thanos", "chourlias", "yourFarmerPassword", "FARMER", "farmer@gmail.com");
+        createUserIfNotFound("219113", "admin", "admin", "admin", "ADMIN", "admin@gmail.com");
+        createUserIfNotFound("165905546", "farmer", "farmer", "farmer", "FARMER", "farmer@gmail.com");
+        createUserIfNotFound("081086489", "employee", "employee", "employee", "EMPLOYEE", "employee@gmail.com");
     }
 
     private void createUserIfNotFound(String tinNumber, String firstName, String lastName, String password, String role, String email) {
