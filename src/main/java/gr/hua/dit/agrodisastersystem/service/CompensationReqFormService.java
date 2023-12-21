@@ -5,6 +5,7 @@ import gr.hua.dit.agrodisastersystem.model.CompensationReqForm;
 import gr.hua.dit.agrodisastersystem.model.User;
 import gr.hua.dit.agrodisastersystem.repository.CompensationReqFormRepository;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,9 @@ public class CompensationReqFormService {
 
     public ResponseEntity<String> addForm(CompensationReqForm form, String userTinNumber) {
 
+        //TODO- Add equals so you can not add the same form two times.
+
+
         // Retrieve the user from the database based on TIN number
         User user = UserRepository.findByTinNumber(userTinNumber);
 
@@ -52,19 +56,34 @@ public class CompensationReqFormService {
         }
     }
 
-    public ResponseEntity<String> deleteCompensationReqForm(String userTinNumber, String FormId){
+    @Transactional
+    public ResponseEntity<String> deleteCompensationReqForm(String userTinNumber, int FormId){
 
-       List<CompensationReqForm> req_form = CompensationReqFormRepository.findByUserTinNumber(userTinNumber);
+        //Fetching all the forms the farmer with FarmerTin owns.
+        List<CompensationReqForm> forms = CompensationReqFormRepository.findAllFormsByUserTinNumber(userTinNumber);
 
+        if(forms.isEmpty())
+            return new ResponseEntity<>("There is no forms registered for the user with TIN number: " + userTinNumber  , HttpStatus.NOT_FOUND);
 
-       for (CompensationReqForm obj : req_form) {
-           if (String.valueOf(obj.getId()).equals(FormId)){
-                //If a form from the farmer with tin number "userTinNumber", with form id "FormId" is found we delete it
-                CompensationReqFormRepository.deleteCompensationReqFormById(obj.getId());
+        // Getting ListIterator
+        ListIterator<CompensationReqForm> namesIterator
+                = forms.listIterator();
+
+        // Traversing elements using next() method
+        while (namesIterator.hasNext()) {
+            CompensationReqForm form = namesIterator.next();
+            //Checking to find the form the user wants to edit
+            if (form.getId() == FormId){
+
+                CompensationReqFormRepository.deleteCompensationReqFormById(form.getId());
                 return new ResponseEntity<>("The form was Deleted successfully", HttpStatus.OK);
-           }
-       }
-       return new ResponseEntity<>("There is no form with the given id in our system please try again", HttpStatus.NOT_FOUND);
+
+            }
+
+        }
+
+
+        return new ResponseEntity<>("There is no form with the given id in our system please try again", HttpStatus.NOT_FOUND);
     }
 
     public ResponseEntity<CompensationReqForm> getCompensationReqFormById(int FormId){
@@ -83,7 +102,7 @@ public class CompensationReqFormService {
 
     public ResponseEntity<CompensationReqForm> replaceFormById(int FormId, String FarmerTin, CompensationReqForm NewForm){
 
-
+        //Fetching all the forms the farmer with FarmerTin owns.
         List<CompensationReqForm> forms = CompensationReqFormRepository.findAllFormsByUserTinNumber(FarmerTin);
 
         if(forms.isEmpty())
@@ -96,12 +115,13 @@ public class CompensationReqFormService {
         // Traversing elements using next() method
         while (namesIterator.hasNext()) {
             CompensationReqForm form = namesIterator.next();
-
+            //Checking to find the form the user wants to edit
             if (form.getId() == FormId){
 
                 if(form.equals(NewForm)){
-                    System.out.println("wtfff");
+
                     return new ResponseEntity<>(form, HttpStatus.OK);
+
                 }
 
 

@@ -91,7 +91,7 @@ public class CompensationReqForm {
     public boolean equals(Object form) {
         if (this == form) return true;
         if (!(form instanceof CompensationReqForm that)) return false;
-        return id == that.id && acares == that.acares && Objects.equals(location, that.location) && Objects.equals(damage_discription, that.damage_discription) && Objects.equals(cropType, that.cropType) && Objects.equals(status, that.status);
+        return  acares == that.acares && Objects.equals(location, that.location) && Objects.equals(damage_discription, that.damage_discription) && Objects.equals(cropType, that.cropType) && Objects.equals(status, that.status);
     }
 
     @Override

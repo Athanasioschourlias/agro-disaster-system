@@ -43,6 +43,7 @@ public class CompensationFormsSubmit {
      */
     @PostMapping(path = "/create/form/{farmer_tin}")
     public ResponseEntity<String> saveNewForm(@PathVariable("farmer_tin") String FarmerTin, @RequestBody CompensationReqForm form ) {
+
         try {
 
             return CompensationReqFormService.addForm(form, FarmerTin);
@@ -52,6 +53,7 @@ public class CompensationFormsSubmit {
             return new ResponseEntity<>("Can not Add the form", HttpStatus.EXPECTATION_FAILED);
 
         }
+
     }
 
     /**
@@ -77,20 +79,20 @@ public class CompensationFormsSubmit {
     /**
      * This method is responsible to check if the form belongs to the farmer and then if it does to delete it
      *
-     * @param  FarmerTin  A vaid farmet tin number
+     * @param  FarmerTin  A valid farmer tin number
      * @param  FormId The id number of the form the user tries to delete
      *
      * @return on success a message reassuring the success of the deletion
      */
     @DeleteMapping ("/delete/form/{form_id}/{farmer_tin}")
-    public ResponseEntity<String> deleteFormById(@PathVariable("form_id") String FormId, @PathVariable("farmer_tin") String FarmerTin) {
+    public ResponseEntity<String> deleteFormById(@PathVariable("form_id") int FormId, @PathVariable("farmer_tin") String FarmerTin) {
 
         try {
 
             return CompensationReqFormService.deleteCompensationReqForm(FarmerTin, FormId);
 
         } catch (Exception e){
-
+            System.out.println(e.getMessage());
             return new ResponseEntity<>("Can not Delete the form", HttpStatus.EXPECTATION_FAILED);
 
         }
