@@ -66,13 +66,13 @@ public class CompensationFormsSubmit {
      * @return A Form type json object of the newly added form to the database
      */
     @PutMapping("/edit/form/{form_id}/{farmer_tin}")
-    public ResponseEntity<CompensationReqForm> updateFormById(
+    public ResponseEntity<String> updateFormById(
             @PathVariable("form_id") int FormId,
             @PathVariable("farmer_tin") String FarmerTin,
             @RequestBody CompensationReqForm Form)
     {
 
-        return CompensationReqFormService.replaceFormById(FormId,FarmerTin,Form);
+        return CompensationReqFormService.replaceUserFormById(FormId,FarmerTin,Form);
 
     }
 

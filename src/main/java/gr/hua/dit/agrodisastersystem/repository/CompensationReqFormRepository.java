@@ -19,4 +19,7 @@ public interface CompensationReqFormRepository extends JpaRepository<Compensatio
     CompensationReqForm findCompensationReqFormById(int from_id);
     void deleteCompensationReqFormById(int form_id);
 
+    List<CompensationReqForm> findCompensationReqFormByStatusNot(String status);
+
+    List<CompensationReqForm> findCompensationReqFormByStatus(String status);
 }

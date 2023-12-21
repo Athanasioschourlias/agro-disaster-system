@@ -25,7 +25,9 @@ public class FormManager {
      */
     @GetMapping("/get-forms/all")
     public List<CompensationReqForm> getAllForms() {
+
         return CompensationReqFormService.findAllForms();
+
     }
 
     /**
@@ -35,9 +37,9 @@ public class FormManager {
      * @return A list with all the processed forms
      */
     @GetMapping("/get-forms/processed")
-    public List<CompensationReqForm> getAllProcessedForms() {
+    public ResponseEntity<List<CompensationReqForm>> getAllProcessedForms() {
 
-        return new ArrayList<>();
+        return CompensationReqFormService.getProcessedForms();
 
     }
 
@@ -48,9 +50,9 @@ public class FormManager {
      * @return A list with all the un-processed forms
      */
     @GetMapping("/get-forms")
-    public List<CompensationReqForm> getAllUnProcessedForms() {
+    public ResponseEntity<List<CompensationReqForm>> getAllUnProcessedForms() {
 
-        return new ArrayList<>();
+        return CompensationReqFormService.getUnprocessedForms();
 
     }
 
@@ -63,9 +65,9 @@ public class FormManager {
      * @return A Form type json object of the newly added form to the database
      */
     @PutMapping("/edit/form/{form_id}")
-    public ResponseEntity<CompensationReqForm> updateUserById(@PathVariable("form_id") String FormId, @RequestBody CompensationReqForm Form) {
+    public ResponseEntity<String> updateUserById(@PathVariable("form_id") int FormId, @RequestBody CompensationReqForm Form) {
 
-        throw new IllegalStateException("Cannot yet return all the unprocessed forms");
+        return CompensationReqFormService.replaceFormById(FormId, Form);
 
     }
 
@@ -78,9 +80,16 @@ public class FormManager {
      * @return A Form type json object of the newly added form to the database
      */
     @DeleteMapping ("/users/delete/{form_id}")
-    public ResponseEntity<String> deleteUserByTIM(@PathVariable("form_id") String FormId) {
+    public ResponseEntity<String> deleteUserByTIN(@PathVariable("form_id") int FormId) {
+        try {
 
-        return new ResponseEntity<>("Cannot yet delete forms" + FormId, HttpStatus.OK);
+            return CompensationReqFormService.deleteCompensationReqFormEmployee(FormId);
+
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Can not Delete the form", HttpStatus.EXPECTATION_FAILED);
+
+        }
     }
 
 

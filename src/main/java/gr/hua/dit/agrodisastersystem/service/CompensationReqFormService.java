@@ -33,6 +33,7 @@ public class CompensationReqFormService {
         return CompensationReqFormRepository.findByUserTinNumber(user_tin);
     }
 
+
     public ResponseEntity<String> addForm(CompensationReqForm form, String userTinNumber) {
 
         //TODO- Add equals so you can not add the same form two times.
@@ -56,6 +57,7 @@ public class CompensationReqFormService {
         }
     }
 
+    //This method lets employees delete forms by id but IT IS necessary to own the form.
     @Transactional
     public ResponseEntity<String> deleteCompensationReqForm(String userTinNumber, int FormId){
 
@@ -86,6 +88,20 @@ public class CompensationReqFormService {
         return new ResponseEntity<>("There is no form with the given id in our system please try again", HttpStatus.NOT_FOUND);
     }
 
+    //This method lets employees delete forms by id but it is NOT necessary to own the forms.
+    //This method should be accesible onlyyyy to ADMINS AND EMPOYEES.
+    @Transactional
+    public ResponseEntity<String> deleteCompensationReqFormEmployee(int FormId){
+
+
+        CompensationReqFormRepository.deleteCompensationReqFormById(
+                CompensationReqFormRepository.findCompensationReqFormById(FormId)
+                        .getId()
+        );
+
+        return new ResponseEntity<>("The form was Deleted successfully", HttpStatus.OK);
+
+    }
     public ResponseEntity<CompensationReqForm> getCompensationReqFormById(int FormId){
 
         CompensationReqForm form = CompensationReqFormRepository.findCompensationReqFormById(FormId);
@@ -100,13 +116,13 @@ public class CompensationReqFormService {
         }
     }
 
-    public ResponseEntity<CompensationReqForm> replaceFormById(int FormId, String FarmerTin, CompensationReqForm NewForm){
+    public ResponseEntity<String> replaceUserFormById(int FormId, String FarmerTin, CompensationReqForm NewForm){
 
         //Fetching all the forms the farmer with FarmerTin owns.
         List<CompensationReqForm> forms = CompensationReqFormRepository.findAllFormsByUserTinNumber(FarmerTin);
 
         if(forms.isEmpty())
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>("The user, with " + FarmerTin + "has no forms yet.", HttpStatus.OK);
 
         // Getting ListIterator
         ListIterator<CompensationReqForm> namesIterator
@@ -119,32 +135,79 @@ public class CompensationReqFormService {
             if (form.getId() == FormId){
 
                 if(form.equals(NewForm)){
-
-                    return new ResponseEntity<>(form, HttpStatus.OK);
-
+                    return new ResponseEntity<>("There no details changed, edit at least one filed", HttpStatus.OK);
                 }
 
+                form.setLocation(NewForm.getLocation());
+                form.setDamageDiscription(NewForm.getDamageDiscription());
+                form.setAcares(NewForm.getAcares());
+                form.setCropType(NewForm.getCropType());
+                form.setStatus(NewForm.getStatus());
+
+                CompensationReqFormRepository.save(form);
+
+                return  new ResponseEntity<>("The Form was edited successfully", HttpStatus.OK);
 
             }
 
         }
-//        for (CompensationReqForm form : req_form) {
-//            if (form.getId() == FormId){
-//
-//
-////                .map(address -> {
-//                    address.setCity(newAddress.getCity());
-//                    address.setPin(newAddress.getPostalCode());
-//                    return repository.save(address);
-//                })
-//                .orElseGet(() -> {
-//                    return repository.save(newAddress);
-//                });
-//                return new ResponseEntity<>(form, HttpStatus.OK);
 
-//            }
-//        }
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>("There is no form with this ID", HttpStatus.OK);
+
+
+    }
+
+    //This method can edit forms that do not belong to the user, and is meant to be used by the employees.
+    public ResponseEntity<String> replaceFormById(int FormId, CompensationReqForm NewForm){
+
+        CompensationReqForm old_form = CompensationReqFormRepository.findCompensationReqFormById(FormId);
+
+
+        if (old_form.getId() == FormId){
+
+            if(old_form.equals(NewForm)){
+                return new ResponseEntity<>("There no details changed, edit at least one filed", HttpStatus.OK);
+            }
+
+            old_form.setLocation(NewForm.getLocation());
+            old_form.setDamageDiscription(NewForm.getDamageDiscription());
+            old_form.setAcares(NewForm.getAcares());
+            old_form.setCropType(NewForm.getCropType());
+            old_form.setStatus(NewForm.getStatus());
+
+            CompensationReqFormRepository.save(old_form);
+
+            return  new ResponseEntity<>("The Form was deleted successfully", HttpStatus.OK);
+
+        }
+
+        return new ResponseEntity<>("There is no form with this ID", HttpStatus.OK);
+
+
+    }
+
+    public ResponseEntity<List<CompensationReqForm>> getUnprocessedForms(){
+
+
+        List<CompensationReqForm> forms = CompensationReqFormRepository.findCompensationReqFormByStatus("NOT PROCESSED");
+
+        if(forms.isEmpty())
+            return new ResponseEntity<>(null  , HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(forms , HttpStatus.OK);
+
+
+    }
+
+    public ResponseEntity<List<CompensationReqForm>> getProcessedForms(){
+
+
+        List<CompensationReqForm> forms = CompensationReqFormRepository.findCompensationReqFormByStatusNot("NOT PROCESSED");
+
+        if(forms.isEmpty())
+            return new ResponseEntity<>(null  , HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(forms , HttpStatus.OK);
 
 
     }
