@@ -26,13 +26,16 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
+        // Iterate over the user's roles and create a new GrantedAuthority for each
+        for (Role role : this.user.getRoles()) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
 
-        List<GrantedAuthority> grantedAuthorities=new ArrayList<GrantedAuthority>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_"+this.user.getRole().toUpperCase()));
-//		System.out.println("inside details impl "+grantedAuthorities.get(0).getAuthority());
         return grantedAuthorities;
     }
+
 
     @Override
     public String getPassword() {
@@ -72,7 +75,4 @@ public class UserDetailsImpl implements UserDetails {
         return user;
     }
 
-    public String hasRole(){
-        return this.user.getRole();
-    }
 }

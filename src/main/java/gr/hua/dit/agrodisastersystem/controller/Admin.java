@@ -1,20 +1,23 @@
 package gr.hua.dit.agrodisastersystem.controller;
 
+import gr.hua.dit.agrodisastersystem.model.Role;
 import gr.hua.dit.agrodisastersystem.model.User;
 import gr.hua.dit.agrodisastersystem.service.UserService;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins="*")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class Admin {
 
     @Autowired
@@ -31,32 +34,31 @@ public class Admin {
         } catch (Exception e){
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
         }
-
-
     }
 
     /**
      * This method is used in order to create and save a new user to the database
      *
      * @param   newUser this marks a parameter our endpoint accepts and describes its use.
-     * @param   auth    .
      * @return          returns the status of the call and an appropriate message
      */
     @PostMapping(path = "/users/register")
-    public ResponseEntity<String> saveUsers(@RequestBody User newUser, Authentication auth) {
+    public ResponseEntity<String> saveUsers(@RequestBody User newUser) {
+        // Extract role names from the Set<Role>
+        Set<String> roleNames = newUser.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
 
-        try {
-            UserService.createUser(newUser);
+        String result = UserService.createUser(newUser, roleNames);
 
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-
-        } catch (Exception e) {
-            // Handle the exception and return an appropriate response
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error creating user: " + e.getMessage());
+        if (result.equals("User created successfully")) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        } else {
+            // If the result is an error message
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         }
-
     }
+
 
     /**
      * This method updates an existing user based on their tin number

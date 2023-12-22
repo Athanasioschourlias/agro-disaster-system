@@ -2,7 +2,9 @@ package gr.hua.dit.agrodisastersystem.model;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -21,8 +23,21 @@ public class User {
     @Column(name = "password", columnDefinition = "VARCHAR(255) BINARY")
     private String password;
 
-    @Column(name = "role") // ΕΛΓΑ employee, farmer, Admin
-    private String role;
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_tin_number", referencedColumnName = "tin_number"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     @Column(name = "email")
     private String email;
@@ -38,14 +53,14 @@ public class User {
         this.email = email;
     }
 
-    public User(String tinNumber, String firstName, String lastName, String password, String userMail, String userRole) {
+    public User(String tinNumber, String firstName, String lastName, String password, String userMail, Set<Role> userRole) {
 
         this.tinNumber = tinNumber;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = userMail;
-        this.role = userRole;
+        this.roles = userRole;
 
     }
 
@@ -81,13 +96,6 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     @Override
     public boolean equals(Object o) {

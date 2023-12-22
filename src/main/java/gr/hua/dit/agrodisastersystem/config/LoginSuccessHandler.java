@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Objects;
 
 @Component
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
@@ -22,26 +21,32 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
     private static final Logger logger = LoggerFactory.getLogger(LoginSuccessHandler.class);
 
     @Value("${app.react.proxy}")
-    String redirectURL;
+    String baseRedirectURL;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
-        UserDetailsImpl userDetails= (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         logger.info("Authentication Success for user: {}", userDetails.getUsername());
 
-        Collection<? extends GrantedAuthority> authorities= userDetails.getAuthorities();
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
 
-        authorities.forEach(auth -> logger.info("Authority: {}", auth.getAuthority()));
+        String redirectURL = baseRedirectURL;
 
-        if(Objects.equals(userDetails.hasRole(), "ADMIN")){
-            redirectURL += "admin/users/register";
-        }
-        if(Objects.equals(userDetails.hasRole(), "FARMER")){
-            redirectURL += "request/form";
-        }
-        if(Objects.equals(userDetails.hasRole(), "EMPLOYEE")){
-            redirectURL += "requests/sendTo";
+        for (GrantedAuthority authority : authorities) {
+            logger.info("Authority: {}", authority.getAuthority());
+            if (authority.getAuthority().equals("ROLE_ADMIN")) {
+                redirectURL += "admin/users/register";
+                break;
+            }
+            if (authority.getAuthority().equals("ROLE_FARMER")) {
+                redirectURL += "request/form";
+                break;
+            }
+            if (authority.getAuthority().equals("ROLE_EMPLOYEE")) {
+                redirectURL += "requests/sendTo";
+                break;
+            }
         }
 
         response.sendRedirect(redirectURL);
