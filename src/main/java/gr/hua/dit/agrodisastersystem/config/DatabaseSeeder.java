@@ -4,6 +4,7 @@ import gr.hua.dit.agrodisastersystem.model.Role;
 import gr.hua.dit.agrodisastersystem.model.User;
 import gr.hua.dit.agrodisastersystem.repository.RoleRepository;
 import gr.hua.dit.agrodisastersystem.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     }
 
     @Override
+    @Transactional
     public void run(String... args) {
         // Create roles
         Role adminRole = createRoleIfNotFound("ROLE_ADMIN");

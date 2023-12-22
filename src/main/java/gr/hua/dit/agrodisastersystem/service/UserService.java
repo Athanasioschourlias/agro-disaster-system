@@ -33,7 +33,7 @@ public class UserService {
         return userRepository.findByTinNumber(TIN);
     }
 
-    public String createUser(User user, Set<String> roleNames) {
+    public String createUser(User user, String tinNumber, Set<String> roleNames) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
