@@ -63,60 +63,46 @@ public class Admin {
     /**
      * This method updates an existing user based on their tin number
      *
-     * @param   UserTin The Tax identifiers number of the user
+     * @param   userTin The Tax identifiers number of the user
      * @param   newUser A json of type new user
      * @return          returns the updated user.
      */
-    @PutMapping ("/users/modify/{user_tin}")
-    public ResponseEntity<User> updateUserByTIN(@PathVariable("user_tin") String UserTin,@RequestBody User newUser) {
+    @PutMapping("/users/modify/{user_tin}")
+    public ResponseEntity<?> updateUserByTin(@PathVariable("user_tin") String userTin, @RequestBody User newUser) {
+        try {
+            User existingUser = UserService.findUserByTin(userTin);
+            if (existingUser == null) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
 
-        throw new IllegalStateException("Not yet ready to modify users by ID");
-
-    }
-
-    /**
-     * This method updates an existing user based on their ID number
-     *
-     * @param   UserId The number of the user in the database
-     * @param   newUser A json of type new user
-     * @return          returns the updated user.
-     */
-    @PutMapping ("/users/modify/{user_id}")
-    public ResponseEntity<User> updateUserById(@PathVariable("user_id") String UserId,@RequestBody User newUser) {
-
-        throw new IllegalStateException("Not yet ready to modify users by TIM");
-
-
+            User updatedUser = UserService.saveUser(existingUser, newUser);
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        } catch (Exception e) {
+            // Log the exception and return an appropriate response
+            return new ResponseEntity<>("Error updating user: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
      * This method deletes a user from the database based on their TIN number
      *
-     * @param   UserTin The number of the user in the database
+     * @param   userTin The number of the user in the database
      * @return          String - Message and status whether the user deleted successfully or something went wrong
      */
-    @DeleteMapping ("/users/delete/{user_tin}")
-    public ResponseEntity<String> deleteUserByTIM(@PathVariable("user_tin") String UserTin) {
+    @DeleteMapping("/users/delete/{user_tin}")
+    public ResponseEntity<String> deleteUserByTin(@PathVariable("user_tin") String userTin) {
+        try {
+            User user = UserService.findUserByTin(userTin);
+            if (user == null) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
 
-        return new ResponseEntity<>("Can not delete users if there are not any to delete by TIN",HttpStatus.OK);
+            UserService.deleteUser(user);
+            return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            // Log the exception and return an appropriate response
+            return new ResponseEntity<>("Error deleting user: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
-    /**
-     * This method deletes a user from the database based on their ID number
-     *
-     * @param   UserId The number of the user in the database
-     * @return          String - Message and status whether the user deleted successfully or something went wrong
-     */
-    @DeleteMapping ("/users/delete/{user_id}")
-    public ResponseEntity<String> deleteUserById(@PathVariable("user_id") String UserId) {
-
-        return new ResponseEntity<>("Can not delete users if there are not any to delete by ID",HttpStatus.OK);
-    }
-
-
-
-
-
-
 
 }

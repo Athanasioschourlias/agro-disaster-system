@@ -33,7 +33,6 @@ public class UserService {
         return userRepository.findByTinNumber(TIN);
     }
 
-
     public String createUser(User user, Set<String> roleNames) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
@@ -62,5 +61,32 @@ public class UserService {
         } catch (DataIntegrityViolationException e) {
             return "Error creating user: " + e.getMessage();
         }
+    }
+
+    public User saveUser(User existingUser, User updatedUserDetails) {
+        existingUser.setTin_number(updatedUserDetails.getTin_number());
+
+        if (updatedUserDetails.getPassword() != null && !updatedUserDetails.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(updatedUserDetails.getPassword()));
+        }
+
+        // Update roles
+        if (updatedUserDetails.getRoles() != null && !updatedUserDetails.getRoles().isEmpty()) {
+            Set<Role> updatedRoles = new HashSet<>();
+            for (Role role : updatedUserDetails.getRoles()) {
+                roleRepository.findByName(role.getName()).ifPresent(updatedRoles::add);
+            }
+            existingUser.setRoles(updatedRoles);
+        }
+
+        existingUser.setFirstName(updatedUserDetails.getFirstName());
+        existingUser.setLastName(updatedUserDetails.getLastName());
+        existingUser.setEmail(updatedUserDetails.getEmail());
+
+        return userRepository.save(existingUser);
+    }
+
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 }
