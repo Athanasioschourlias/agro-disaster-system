@@ -2,12 +2,14 @@ package gr.hua.dit.agrodisastersystem.config.jwt;
 
 import gr.hua.dit.agrodisastersystem.model.UserDetailsImpl;
 import io.jsonwebtoken.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -59,4 +61,13 @@ public class JwtUtils {
 
         return false;
     }
+
+    public String extractJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null; // Or handle this case as appropriate
+    }
+
 }

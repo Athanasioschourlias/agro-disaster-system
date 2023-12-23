@@ -49,7 +49,7 @@ public class Admin {
                 .map(Role::getName)
                 .collect(Collectors.toSet());
 
-        String result = UserService.createUser(newUser, newUser.getTin_number(), roleNames);
+        String result = UserService.createUser(newUser, roleNames);
 
         if (result.equals("User created successfully")) {
             return ResponseEntity.status(HttpStatus.CREATED).body(result);

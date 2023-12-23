@@ -24,7 +24,7 @@ public class User {
     @Column(name="id")
     private int id;
 
-    @Column(name = "tin_number") // Taxpayer Identification Number
+    @Column(name = "tin_number", nullable = false)
     private String tinNumber;
 
     @Column(name = "first_name")
@@ -44,7 +44,7 @@ public class User {
         this.roles = roles;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -77,12 +77,12 @@ public class User {
 
     }
 
-    public String getTin_number() {
+    public String getTinNumber() {
         return tinNumber;
     }
 
-    public void setTin_number(String newTIN) {
-        this.tinNumber = newTIN;
+    public void setTinNumber(String newTin) {
+        this.tinNumber = newTin;
     }
 
     public String getFirstName() {

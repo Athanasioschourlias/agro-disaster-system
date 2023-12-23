@@ -4,35 +4,41 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
+
 @Entity
 @Table(name="compensation_form")
 public class CompensationReqForm {
+    public enum FormStatus {
+        PENDING, REJECTED, COMPLETED;
+    }
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
     private int id;
     @ManyToOne
-    @JoinColumn(name = "farmer_tin_number", referencedColumnName = "tin_number")
+    @JoinColumn(name = "farmer_id", referencedColumnName = "id")
     private User user;
     @Column(name="location")
     private String location;
-    @Column(name="damage_discription")
-    private String damage_discription;
-    @Column(name="acares")
-    private int acares;
+    @Column(name="damage_description")
+    private String damageDescription;
+    @Column(name="acres")
+    private int acres;
     @Column(name="crop_type")
     private String cropType;
+    @Enumerated(EnumType.STRING)
     @Column(name="status")
-    private String status;
+    private FormStatus status;
 
     public CompensationReqForm(){
 
     }
-    public CompensationReqForm(User user, String location, String damage_discription, int acares, String cropType, String status) {
+    public CompensationReqForm(User user, String location, String damage_description, int acres, String cropType, FormStatus status) {
         this.user = user;
         this.location=location;
-        this.damage_discription = damage_discription;
-        this.acares = acares;
+        this.damageDescription = damage_description;
+        this.acres = acres;
         this.cropType = cropType;
         this.status = status;
     }
@@ -47,11 +53,11 @@ public class CompensationReqForm {
         this.location = location;
     }
 
-    public String getStatus() {
+    public FormStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(FormStatus status) {
         this.status = status;
     }
 
@@ -63,20 +69,20 @@ public class CompensationReqForm {
         this.id = id;
     }
 
-    public String getDamageDiscription() {
-        return damage_discription;
+    public String getDamageDescription() {
+        return damageDescription;
     }
 
-    public void setDamageDiscription(String damage_discription) {
-        this.damage_discription = damage_discription;
+    public void setDamageDescription(String damageDescription) {
+        this.damageDescription = damageDescription;
     }
 
-    public int getAcares() {
-        return acares;
+    public int getAcres() {
+        return acres;
     }
 
-    public void setAcares(int acares) {
-        this.acares = acares;
+    public void setAcres(int acres) {
+        this.acres = acres;
     }
 
     public String getCropType() {
@@ -91,11 +97,11 @@ public class CompensationReqForm {
     public boolean equals(Object form) {
         if (this == form) return true;
         if (!(form instanceof CompensationReqForm that)) return false;
-        return  acares == that.acares && Objects.equals(location, that.location) && Objects.equals(damage_discription, that.damage_discription) && Objects.equals(cropType, that.cropType) && Objects.equals(status, that.status);
+        return  acres == that.acres && Objects.equals(location, that.location) && Objects.equals(damageDescription, that.damageDescription) && Objects.equals(cropType, that.cropType) && Objects.equals(status, that.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, location, damage_discription, acares, cropType, status);
+        return Objects.hash(id, location, damageDescription, acres, cropType, status);
     }
 }

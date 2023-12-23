@@ -1,10 +1,9 @@
 package gr.hua.dit.agrodisastersystem.service;
 
 import gr.hua.dit.agrodisastersystem.model.CompensationReqForm;
-
 import gr.hua.dit.agrodisastersystem.model.User;
 import gr.hua.dit.agrodisastersystem.repository.CompensationReqFormRepository;
-
+import gr.hua.dit.agrodisastersystem.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
 
 @Service
 public class CompensationReqFormService {
@@ -22,22 +19,19 @@ public class CompensationReqFormService {
     private CompensationReqFormRepository CompensationReqFormRepository;
 
     @Autowired
-    private gr.hua.dit.agrodisastersystem.repository.UserRepository UserRepository;
+    private UserRepository UserRepository;
 
     public List<CompensationReqForm> findAllForms(){
         return CompensationReqFormRepository.findAll();
     }
 
     public List<CompensationReqForm> findByFarmerTIN(String user_tin) {
-
         return CompensationReqFormRepository.findByUserTinNumber(user_tin);
     }
-
 
     public ResponseEntity<String> addForm(CompensationReqForm form, String userTinNumber) {
 
         //TODO- Add equals so you can not add the same form two times.
-
 
         // Retrieve the user from the database based on TIN number
         User user = UserRepository.findByTinNumber(userTinNumber);
@@ -57,42 +51,9 @@ public class CompensationReqFormService {
         }
     }
 
-    //This method lets employees delete forms by id but IT IS necessary to own the form.
+    //This method lets employees delete forms by id.
     @Transactional
-    public ResponseEntity<String> deleteCompensationReqForm(String userTinNumber, int FormId){
-
-        //Fetching all the forms the farmer with FarmerTin owns.
-        List<CompensationReqForm> forms = CompensationReqFormRepository.findAllFormsByUserTinNumber(userTinNumber);
-
-        if(forms.isEmpty())
-            return new ResponseEntity<>("There is no forms registered for the user with TIN number: " + userTinNumber  , HttpStatus.NOT_FOUND);
-
-        // Getting ListIterator
-        ListIterator<CompensationReqForm> namesIterator
-                = forms.listIterator();
-
-        // Traversing elements using next() method
-        while (namesIterator.hasNext()) {
-            CompensationReqForm form = namesIterator.next();
-            //Checking to find the form the user wants to edit
-            if (form.getId() == FormId){
-
-                CompensationReqFormRepository.deleteCompensationReqFormById(form.getId());
-                return new ResponseEntity<>("The form was Deleted successfully", HttpStatus.OK);
-
-            }
-
-        }
-
-
-        return new ResponseEntity<>("There is no form with the given id in our system please try again", HttpStatus.NOT_FOUND);
-    }
-
-    //This method lets employees delete forms by id but it is NOT necessary to own the forms.
-    //This method should be accesible onlyyyy to ADMINS AND EMPOYEES.
-    @Transactional
-    public ResponseEntity<String> deleteCompensationReqFormEmployee(int FormId){
-
+    public ResponseEntity<String> deleteCompensationReqForm(int FormId){
 
         CompensationReqFormRepository.deleteCompensationReqFormById(
                 CompensationReqFormRepository.findCompensationReqFormById(FormId)
@@ -102,7 +63,7 @@ public class CompensationReqFormService {
         return new ResponseEntity<>("The form was Deleted successfully", HttpStatus.OK);
 
     }
-    public ResponseEntity<CompensationReqForm> getCompensationReqFormById(int FormId){
+    public ResponseEntity<CompensationReqForm> findByCompensationReqFormById(int FormId){
 
         CompensationReqForm form = CompensationReqFormRepository.findCompensationReqFormById(FormId);
 
@@ -116,45 +77,19 @@ public class CompensationReqFormService {
         }
     }
 
-    public ResponseEntity<String> replaceUserFormById(int FormId, String FarmerTin, CompensationReqForm NewForm){
-
-        //Fetching all the forms the farmer with FarmerTin owns.
-        List<CompensationReqForm> forms = CompensationReqFormRepository.findAllFormsByUserTinNumber(FarmerTin);
-
-        if(forms.isEmpty())
-            return new ResponseEntity<>("The user, with " + FarmerTin + "has no forms yet.", HttpStatus.OK);
-
-        // Getting ListIterator
-        ListIterator<CompensationReqForm> namesIterator
-                = forms.listIterator();
-
-        // Traversing elements using next() method
-        while (namesIterator.hasNext()) {
-            CompensationReqForm form = namesIterator.next();
-            //Checking to find the form the user wants to edit
-            if (form.getId() == FormId){
-
-                if(form.equals(NewForm)){
-                    return new ResponseEntity<>("There no details changed, edit at least one filed", HttpStatus.OK);
-                }
-
-                form.setLocation(NewForm.getLocation());
-                form.setDamageDiscription(NewForm.getDamageDiscription());
-                form.setAcares(NewForm.getAcares());
-                form.setCropType(NewForm.getCropType());
-                form.setStatus(NewForm.getStatus());
-
-                CompensationReqFormRepository.save(form);
-
-                return  new ResponseEntity<>("The Form was edited successfully", HttpStatus.OK);
-
-            }
-
+    private boolean checkChanges(CompensationReqForm NewForm, CompensationReqForm form) {
+        if (form.equals(NewForm)) {
+            return true;
         }
 
-        return new ResponseEntity<>("There is no form with this ID", HttpStatus.OK);
+        form.setLocation(NewForm.getLocation());
+        form.setDamageDescription(NewForm.getDamageDescription());
+        form.setAcres(NewForm.getAcres());
+        form.setCropType(NewForm.getCropType());
+        form.setStatus(NewForm.getStatus());
 
-
+        CompensationReqFormRepository.save(form);
+        return false;
     }
 
     //This method can edit forms that do not belong to the user, and is meant to be used by the employees.
@@ -165,19 +100,10 @@ public class CompensationReqFormService {
 
         if (old_form.getId() == FormId){
 
-            if(old_form.equals(NewForm)){
+            if (checkChanges(NewForm, old_form))
                 return new ResponseEntity<>("There no details changed, edit at least one filed", HttpStatus.OK);
-            }
 
-            old_form.setLocation(NewForm.getLocation());
-            old_form.setDamageDiscription(NewForm.getDamageDiscription());
-            old_form.setAcares(NewForm.getAcares());
-            old_form.setCropType(NewForm.getCropType());
-            old_form.setStatus(NewForm.getStatus());
-
-            CompensationReqFormRepository.save(old_form);
-
-            return  new ResponseEntity<>("The Form was deleted successfully", HttpStatus.OK);
+            return  new ResponseEntity<>("The Form was modified successfully", HttpStatus.OK);
 
         }
 
@@ -189,7 +115,7 @@ public class CompensationReqFormService {
     public ResponseEntity<List<CompensationReqForm>> getUnprocessedForms(){
 
 
-        List<CompensationReqForm> forms = CompensationReqFormRepository.findCompensationReqFormByStatus("NOT PROCESSED");
+        List<CompensationReqForm> forms = CompensationReqFormRepository.findCompensationReqFormByStatus(CompensationReqForm.FormStatus.PENDING);
 
         if(forms.isEmpty())
             return new ResponseEntity<>(null  , HttpStatus.NOT_FOUND);
@@ -202,7 +128,7 @@ public class CompensationReqFormService {
     public ResponseEntity<List<CompensationReqForm>> getProcessedForms(){
 
 
-        List<CompensationReqForm> forms = CompensationReqFormRepository.findCompensationReqFormByStatusNot("NOT PROCESSED");
+        List<CompensationReqForm> forms = CompensationReqFormRepository.findCompensationReqFormByStatusNot(CompensationReqForm.FormStatus.PENDING);
 
         if(forms.isEmpty())
             return new ResponseEntity<>(null  , HttpStatus.NOT_FOUND);

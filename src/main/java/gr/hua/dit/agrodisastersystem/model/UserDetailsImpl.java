@@ -44,7 +44,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.user.getTin_number();
+        return this.user.getTinNumber();
     }
 
     @Override

@@ -54,7 +54,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         if (userOptional==null) {
             User user = new User();
-            user.setTin_number(tinNumber);
+            user.setTinNumber(tinNumber);
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setPassword(passwordEncoder.encode(password));

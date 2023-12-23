@@ -2,9 +2,9 @@ package gr.hua.dit.agrodisastersystem.repository;
 
 import gr.hua.dit.agrodisastersystem.model.CompensationReqForm;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public interface CompensationReqFormRepository extends JpaRepository<Compensatio
     CompensationReqForm findCompensationReqFormById(int from_id);
     void deleteCompensationReqFormById(int form_id);
 
-    List<CompensationReqForm> findCompensationReqFormByStatusNot(String status);
+    List<CompensationReqForm> findCompensationReqFormByStatusNot(CompensationReqForm.FormStatus status);
 
-    List<CompensationReqForm> findCompensationReqFormByStatus(String status);
+    List<CompensationReqForm> findCompensationReqFormByStatus(CompensationReqForm.FormStatus status);
 }

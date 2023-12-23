@@ -4,6 +4,7 @@ import gr.hua.dit.agrodisastersystem.model.Role;
 import gr.hua.dit.agrodisastersystem.model.User;
 import gr.hua.dit.agrodisastersystem.repository.RoleRepository;
 import gr.hua.dit.agrodisastersystem.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,11 +30,12 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findUserByTin(String TIN) {
-        return userRepository.findByTinNumber(TIN);
+    public User findUserByTin(String tinNumber) {
+        return userRepository.findByTinNumber(tinNumber);
     }
 
-    public String createUser(User user, String tinNumber, Set<String> roleNames) {
+    @Transactional
+    public String createUser(User user, Set<String> roleNames) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
@@ -63,8 +65,9 @@ public class UserService {
         }
     }
 
+    @Transactional
     public User saveUser(User existingUser, User updatedUserDetails) {
-        existingUser.setTin_number(updatedUserDetails.getTin_number());
+        existingUser.setTinNumber(updatedUserDetails.getTinNumber());
 
         if (updatedUserDetails.getPassword() != null && !updatedUserDetails.getPassword().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(updatedUserDetails.getPassword()));
@@ -85,8 +88,10 @@ public class UserService {
 
         return userRepository.save(existingUser);
     }
-
+    @Transactional
     public void deleteUser(User user) {
+        user.getRoles().clear();
+        userRepository.save(user);
         userRepository.delete(user);
     }
 }
