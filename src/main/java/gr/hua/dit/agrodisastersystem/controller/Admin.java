@@ -23,9 +23,9 @@ public class Admin {
     @Autowired
     private UserService UserService;
     /**
-     * This function is responsible to fetch and return
+     * This function is responsible to fetch and return all the user, ONLY for authenticated users/admins
      *
-     * @return      A list of type USER
+     * @return  Response entity of a list of type USER
      */
     @GetMapping("/users/get_all")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -39,7 +39,8 @@ public class Admin {
     /**
      * This method is used in order to create and save a new user to the database
      *
-     * @param   newUser this marks a parameter our endpoint accepts and describes its use.
+     * @param   newUser A User like object which will replace the old user
+     * @param   auth    Authentication token for validation
      * @return          returns the status of the call and an appropriate message
      */
     @PostMapping(path = "/users/register")

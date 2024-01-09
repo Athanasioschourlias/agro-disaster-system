@@ -19,10 +19,10 @@ public class FormManager {
     @Autowired
     private CompensationReqFormService CompensationReqFormService;
     /**
+     *
      * This method is responsible to fetch all the forms in the system available, processed and unprocessed
      *
-     *
-     * @return A list with all the available forms
+     * @return A list with all the available forms type of CompensationReqForm
      */
     @GetMapping("/get-forms/all")
     public List<CompensationReqForm> getAllForms() {
@@ -32,8 +32,7 @@ public class FormManager {
     /**
      * This method is responsible to fetch all the processed forms in the system
      *
-     *
-     * @return A list with all the processed forms
+     * @return Response entity of a list with all the processed forms
      */
     @GetMapping("/get-forms/processed")
     public ResponseEntity<List<CompensationReqForm>> getAllProcessedForms() {
@@ -46,7 +45,7 @@ public class FormManager {
      * This method is responsible to fetch all the un-processed forms in the system
      *
      *
-     * @return A list with all the un-processed forms
+     * @return Response entity of a list with all the un-processed forms
      */
     @GetMapping("/get-forms/pending")
     public ResponseEntity<List<CompensationReqForm>> getAllUnProcessedForms() {
@@ -58,14 +57,15 @@ public class FormManager {
     /**
      * This method is responsible to validate the json object to be of type Form and then add it to the database and handle any errors.
      *
-     * @param  FormId  A valid form id number
+     * @param  FormId  A valid formId
      * @param  Form    A Form type object
      *
-     * @return A Form type json object of the newly added form to the database
+     * @return Response entity as a message to present to the user
      */
     @PutMapping("/edit/form/{form_id}")
     public ResponseEntity<String> updateFormById(@PathVariable("form_id") int FormId, @RequestBody CompensationReqForm Form) {
         return CompensationReqFormService.replaceFormById(FormId, Form);
+
     }
 
     /**
@@ -74,7 +74,7 @@ public class FormManager {
      *
      * @param  FormId  A valid form id.
      *
-     * @return A Form type json object of the newly added form to the database
+     * @return Response entity with a success or failure message
      */
     @DeleteMapping ("/delete/form/{form_id}")
     public ResponseEntity<String> deleteFormById(@PathVariable("form_id") int FormId) {
