@@ -64,7 +64,9 @@ public class SecurityConfiguration {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/health/check/**").permitAll()
+                        .requestMatchers("/auth/login", "/health/check/**",
+                                "/api-docs/**", "/swagger-ui.html",
+                                "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf().disable()
