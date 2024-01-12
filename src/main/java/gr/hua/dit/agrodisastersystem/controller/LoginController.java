@@ -34,6 +34,7 @@ public class LoginController  {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
+            System.out.println(loginRequest);
             Authentication authenticationRequest =
                     UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.username(), loginRequest.password());
             Authentication authenticationResponse =
